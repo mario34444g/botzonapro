@@ -5,11 +5,6 @@ import time
 import logging
 import os
 
-# DEBUG TEMPORAL — muestra qué variables existen en Railway
-import sys
-print("=== DEBUG ENV VARS ===", flush=True)
-print(f"Variables disponibles: {[k for k in os.environ.keys()]}", flush=True)
-print("======================", flush=True)
 
 # Configuración — la API key viene de variable de entorno, NUNCA hardcodeada
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
@@ -151,7 +146,7 @@ Si APROBADA, elige de: {razones_aprobada}
 Si RECHAZADA, elige de: {razones_rechazada}
 """
 
-    modelos_a_probar = ['gemini-2.5-flash-preview-04-17', 'gemini-2.0-flash', 'gemini-1.5-flash']
+    modelos_a_probar = ['gemini-2.5-flash']
 
     for nombre_modelo in modelos_a_probar:
         try:
@@ -238,7 +233,7 @@ Si APROBADA, elige de: {razones_aprobada}
 Si RECHAZADA, elige de: {razones_rechazada}
 """
 
-    modelos_a_probar = ['gemini-2.5-flash-preview-04-17', 'gemini-2.0-flash', 'gemini-1.5-flash']
+    modelos_a_probar = ['gemini-2.5-flash']
 
     for nombre_modelo in modelos_a_probar:
         try:
@@ -310,7 +305,7 @@ Si APROBADA, elige de: {razones_aprobada}
 Si RECHAZADA, elige de: {razones_rechazada}
 """
 
-    modelos_a_probar = ['gemini-2.5-flash-preview-04-17', 'gemini-2.0-flash', 'gemini-1.5-flash']
+    modelos_a_probar = ['gemini-2.5-flash']
 
     for nombre_modelo in modelos_a_probar:
         try:
@@ -374,7 +369,7 @@ REGLAS ABSOLUTAS:
 - El resultado debe ser UN solo bloque de texto corrido, sin saltos de línea.
 """
 
-    modelos_a_probar = ['gemini-2.5-flash-preview-04-17', 'gemini-2.0-flash', 'gemini-1.5-flash']
+    modelos_a_probar = ['gemini-2.5-flash']
 
     for nombre_modelo in modelos_a_probar:
         try:
