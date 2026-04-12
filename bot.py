@@ -24,7 +24,7 @@ from gemini_client import (
 from casos import iniciar_apelacion, obtener_estado_usuario, finalizar_apelacion, obtener_datos_usuario, actualizar_caso
 
 # Token
-TELEGRAM_TOKEN = "8449469316:AAEZOpopodG0is48FNXXSYHafNd-seqvBA8"
+TELEGRAM_TOKEN = "8791531690:AAE_LHSB3vF-2R37KBAu7LJ9Pa65QYMDfhg"
 
 # Carpeta temporal
 TEMP_DIR = os.path.join(os.path.dirname(__file__), "temp")
