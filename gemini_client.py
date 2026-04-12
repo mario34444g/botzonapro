@@ -4,8 +4,10 @@ import time
 import logging
 import os
 
-# Configuración
-GEMINI_API_KEY = "AIzaSyBXEnF1OkZr1fDzPIsfjDJTvOKnOw_Z8JE"
+# Configuración — la API key viene de variable de entorno, NUNCA hardcodeada
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    raise ValueError("❌ Variable de entorno GEMINI_API_KEY no está definida.")
 genai.configure(api_key=GEMINI_API_KEY)
 
 logger = logging.getLogger(__name__)
