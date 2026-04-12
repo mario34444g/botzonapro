@@ -1,5 +1,6 @@
-# Cliente para la API de Gemini (con soporte de VIDEO y SDK oficial)
-import google.generativeai as genai
+# Cliente para la API de Gemini (google-genai SDK nuevo)
+from google import genai
+from google.genai import types
 import time
 import logging
 import os
@@ -8,7 +9,8 @@ import os
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise ValueError("❌ Variable de entorno GEMINI_API_KEY no está definida.")
-genai.configure(api_key=GEMINI_API_KEY)
+
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 logger = logging.getLogger(__name__)
 
@@ -55,19 +57,19 @@ def subir_video_gemini(video_path):
     """Sube un video a Gemini y espera que esté listo"""
     try:
         logger.info(f"Subiendo archivo: {video_path}")
-        video_file = genai.upload_file(path=video_path)
-        
+        video_file = client.files.upload(file=video_path)
+
         while video_file.state.name == "PROCESSING":
             time.sleep(2)
-            video_file = genai.get_file(video_file.name)
-            
+            video_file = client.files.get(name=video_file.name)
+
         if video_file.state.name == "FAILED":
             logger.error("Falló el procesamiento del video en Gemini.")
             return None
-            
+
         logger.info(f"Video listo: {video_file.name}")
         return video_file
-        
+
     except Exception as e:
         logger.error(f"Error subiendo video: {e}")
         return None
@@ -76,7 +78,7 @@ def subir_imagen_gemini(imagen_path):
     """Sube una imagen a Gemini y retorna el objeto de archivo"""
     try:
         logger.info(f"Subiendo imagen: {imagen_path}")
-        imagen_file = genai.upload_file(path=imagen_path)
+        imagen_file = client.files.upload(file=imagen_path)
         logger.info(f"Imagen lista: {imagen_file.name}")
         return imagen_file
     except Exception as e:
@@ -143,15 +145,15 @@ Si APROBADA, elige de: {razones_aprobada}
 Si RECHAZADA, elige de: {razones_rechazada}
 """
 
-    modelos_a_probar = ['gemini-2.5-flash', 'gemini-2.0-flash-exp', 'gemini-1.5-flash']
+    modelos_a_probar = ['gemini-2.5-flash-preview-04-17', 'gemini-2.0-flash', 'gemini-1.5-flash']
 
     for nombre_modelo in modelos_a_probar:
         try:
             logger.info(f"Intentando usar modelo: {nombre_modelo}")
-            model = genai.GenerativeModel(nombre_modelo)
-            response = model.generate_content(
-                [imagen_file, prompt],
-                generation_config=genai.types.GenerationConfig(
+            response = client.models.generate_content(
+                model=nombre_modelo,
+                contents=[imagen_file, prompt],
+                config=types.GenerateContentConfig(
                     temperature=0,
                     max_output_tokens=1024
                 )
@@ -173,9 +175,9 @@ def decidir_apelacion_con_video(argumento_usuario, categoria, video_file):
         "spam": "Spam o Contenido Irrelevante",
         "otro": "Otro motivo"
     }
-    
+
     nombre_cat = nombres_categorias.get(categoria, "Sanción General")
-    
+
     if categoria == "no_original":
         reglas = REGLAS_ORIGINALIDAD
     elif categoria == "baja_calidad":
@@ -216,7 +218,7 @@ PASO 1 — ANÁLISIS VISUAL DEL VIDEO (responde cada punto antes de decidir):
 PASO 2 — DECISIÓN DETERMINISTA:
 Basándote ÚNICAMENTE en la evidencia visual observada y los lineamientos:
 - Si el video cumple la mayoría de los criterios positivos: APROBADA.
-- Si el video incumple incluso UN criterio crítico (marcas de agua externas, screnn recording, menos de 60s sin contenido original): RECHAZADA.
+- Si el video incumple incluso UN criterio crítico (marcas de agua externas, screen recording, menos de 60s sin contenido original): RECHAZADA.
 - En caso de duda, decide RECHAZADA.
 Se CONSISTENTE: el mismo video siempre debe recibir la misma decisión.
 
@@ -229,16 +231,16 @@ MENSAJE: [Elige UNA razón de la lista y cópiala exactamente]
 Si APROBADA, elige de: {razones_aprobada}
 Si RECHAZADA, elige de: {razones_rechazada}
 """
-    
-    modelos_a_probar = ['gemini-2.5-flash', 'gemini-2.0-flash-exp', 'gemini-1.5-flash']
-    
+
+    modelos_a_probar = ['gemini-2.5-flash-preview-04-17', 'gemini-2.0-flash', 'gemini-1.5-flash']
+
     for nombre_modelo in modelos_a_probar:
         try:
             logger.info(f"Intentando usar modelo: {nombre_modelo}")
-            model = genai.GenerativeModel(nombre_modelo)
-            
-            response = model.generate_content([video_file, prompt],
-                generation_config=genai.types.GenerationConfig(
+            response = client.models.generate_content(
+                model=nombre_modelo,
+                contents=[video_file, prompt],
+                config=types.GenerateContentConfig(
                     temperature=0,
                     max_output_tokens=1024
                 )
@@ -247,7 +249,7 @@ Si RECHAZADA, elige de: {razones_rechazada}
         except Exception as e:
             logger.warning(f"Fallo modelo {nombre_modelo}: {e}")
             continue
-            
+
     return "Error: No se pudo generar respuesta con ninguno de los modelos disponibles."
 
 def decidir_apelacion_texto(argumento_usuario, categoria):
@@ -259,14 +261,14 @@ def decidir_apelacion_texto(argumento_usuario, categoria):
         "otro": "Otro motivo"
     }
     nombre_cat = nombres_categorias.get(categoria, "Sanción General")
-    
+
     if categoria == "no_original":
         reglas = REGLAS_ORIGINALIDAD
     elif categoria == "baja_calidad":
         reglas = REGLAS_CALIDAD
     else:
         reglas = REGLAS_ORIGINALIDAD + "\n" + REGLAS_CALIDAD
-    
+
     razones_aprobada = [
         "El contenido revisado cumple con los lineamientos de originalidad y calidad establecidos.",
         "Tras una revisión detallada, no se encontraron infracciones que justifiquen la sanción aplicada.",
@@ -302,14 +304,14 @@ Si APROBADA, elige de: {razones_aprobada}
 Si RECHAZADA, elige de: {razones_rechazada}
 """
 
-    modelos_a_probar = ['gemini-2.5-flash', 'gemini-2.0-flash-exp', 'gemini-1.5-flash']
-    
+    modelos_a_probar = ['gemini-2.5-flash-preview-04-17', 'gemini-2.0-flash', 'gemini-1.5-flash']
+
     for nombre_modelo in modelos_a_probar:
         try:
-            model = genai.GenerativeModel(nombre_modelo)
-            response = model.generate_content(
-                prompt,
-                generation_config=genai.types.GenerationConfig(
+            response = client.models.generate_content(
+                model=nombre_modelo,
+                contents=prompt,
+                config=types.GenerateContentConfig(
                     temperature=0,
                     max_output_tokens=1024
                 )
@@ -317,7 +319,7 @@ Si RECHAZADA, elige de: {razones_rechazada}
             return response.text
         except Exception as e:
             continue
-            
+
     return "Error: No se pudo conectar con el sistema."
 
 
@@ -355,7 +357,7 @@ Lineamientos internos que aplicaron:
 
 Escribe UN ÚNICO PÁRRAFO de máximo 4 oraciones que:
 1. Indique claramente si la decisión fue APROBADA o RECHAZADA.
-2. Mencione 1 o 2 elementos concretos y específicos que se observaron en el contenido (no inventes datos, basa te en el motivo y la categoría).
+2. Mencione 1 o 2 elementos concretos y específicos que se observaron en el contenido (no inventes datos, base te en el motivo y la categoría).
 3. Relacione esos elementos con el lineamiento específico que se infringe o cumple.
 4. Use un tono directo y profesional, sin rodeos, sin listas, sin encabezados.
 
@@ -366,14 +368,14 @@ REGLAS ABSOLUTAS:
 - El resultado debe ser UN solo bloque de texto corrido, sin saltos de línea.
 """
 
-    modelos_a_probar = ['gemini-2.5-flash', 'gemini-2.0-flash-exp', 'gemini-1.5-flash']
+    modelos_a_probar = ['gemini-2.5-flash-preview-04-17', 'gemini-2.0-flash', 'gemini-1.5-flash']
 
     for nombre_modelo in modelos_a_probar:
         try:
-            model = genai.GenerativeModel(nombre_modelo)
-            response = model.generate_content(
-                prompt,
-                generation_config=genai.types.GenerationConfig(
+            response = client.models.generate_content(
+                model=nombre_modelo,
+                contents=prompt,
+                config=types.GenerateContentConfig(
                     temperature=0.3,
                     max_output_tokens=1024
                 )
@@ -383,4 +385,3 @@ REGLAS ABSOLUTAS:
             continue
 
     return "Hola, soy Carlos del equipo de soporte. En este momento tenemos dificultades técnicas para brindarte más detalles. Por favor intenta nuevamente más tarde."
-
