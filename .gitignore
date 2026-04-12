@@ -1,0 +1,18 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Archivos de estado en tiempo de ejecución (se crean solos en el servidor)
+data/apelaciones.json
+data/casos.json
+
+# Videos/imágenes temporales descargadas
+temp/
+uploads/
+
+# Archivos de entorno local (si agregas variables de entorno)
+.env
+
+# Sentencias antiguas
+sentencias/
