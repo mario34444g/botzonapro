@@ -133,8 +133,10 @@ PASO 1 — ANÁLISIS VISUAL OBLIGATORIO (responde cada punto):
 - ¿El argumento del usuario es coherente con lo que se observa en la imagen?
 
 PASO 2 — DECISIÓN:
-Basándote ÚNICAMENTE en lo observado y los lineamientos, decide con total certeza.
-Si existe alguna duda significativa que no puedas resolver mirando la imagen, decide RECHAZADA.
+Basándote en la evidencia visual y evaluando el esfuerzo del creador:
+- Si el contenido es predominantemente original, tiene buena calidad, o demuestra esfuerzo creativo, decide: APROBADA.
+- Si es evidente que es un robo directo de contenido, tiene marcas de agua chinas o de otras redes, es de ínfima calidad o no aporta NADA de valor, decide: RECHAZADA.
+- Si tienes alguna duda leve, asume la buena fe del creador y decide APROBADA.
 
 PASO 3 — FORMATO DE RESPUESTA:
 Devuelve SOLO esto, sin ningún texto adicional:
@@ -216,11 +218,11 @@ PASO 1 — ANÁLISIS VISUAL DEL VIDEO (responde cada punto antes de decidir):
 - ¿Hay evidencia de que el creador aparece, habla o crea activamente el contenido?
 - ¿El argumento del usuario es coherente con lo que se observa en el video?
 
-PASO 2 — DECISIÓN DETERMINISTA:
-Basándote ÚNICAMENTE en la evidencia visual observada y los lineamientos:
-- Si el video cumple la mayoría de los criterios positivos: APROBADA.
-- Si el video incumple incluso UN criterio crítico (marcas de agua externas, screen recording, menos de 60s sin contenido original): RECHAZADA.
-- En caso de duda, decide RECHAZADA.
+PASO 2 — DECISIÓN:
+Basándote en la evidencia visual y evaluando el esfuerzo del creador:
+- Si el video es predominantemente original, tiene buena calidad, o demuestra esfuerzo (incluso si es algo corto o tiene inspiración), decide: APROBADA.
+- Si es evidente que es un robo directo de contenido, tiene marcas de agua chinas o de otras redes, es de ínfima calidad o no aporta NADA de valor, decide: RECHAZADA.
+- Si tienes alguna duda leve, asume la buena fe del creador y decide APROBADA.
 Se CONSISTENTE: el mismo video siempre debe recibir la misma decisión.
 
 PASO 3 — FORMATO DE RESPUESTA:
@@ -292,8 +294,8 @@ Lineamientos:
 
 INSTRUCCIONES:
 - Sin video adjunto, la carga de la prueba recae en el argumento del usuario.
-- Solo decide APROBADA si el argumento describe evidencia concreta, específica e irrefutable de que no hay infracción.
-- En cualquier otro caso, decide RECHAZADA.
+- Si el argumento describe de forma convincente y coherente por qué el contenido es original o de calidad, o demuestra esfuerzo (incluso si es breve), asume la buena fe del creador y decide: APROBADA.
+- Si el argumento es vulgar, irrelevante, o es evidente que miente sobre un robo de contenido, decide: RECHAZADA.
 - Sé consistente: el mismo argumento siempre debe producir la misma decisión.
 
 Devuelve SOLO esto:
