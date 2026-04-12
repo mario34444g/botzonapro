@@ -156,7 +156,7 @@ Si RECHAZADA, elige de: {razones_rechazada}
                 contents=[imagen_file, prompt],
                 config=types.GenerateContentConfig(
                     temperature=0,
-                    max_output_tokens=1024
+                    max_output_tokens=2024
                 )
             )
             return response.text
@@ -243,7 +243,7 @@ Si RECHAZADA, elige de: {razones_rechazada}
                 contents=[video_file, prompt],
                 config=types.GenerateContentConfig(
                     temperature=0,
-                    max_output_tokens=1024
+                    max_output_tokens=2024
                 )
             )
             return response.text
@@ -314,7 +314,7 @@ Si RECHAZADA, elige de: {razones_rechazada}
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     temperature=0,
-                    max_output_tokens=1024
+                    max_output_tokens=2024
                 )
             )
             return response.text
@@ -378,7 +378,7 @@ REGLAS ABSOLUTAS:
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     temperature=0.3,
-                    max_output_tokens=1024
+                    max_output_tokens=2024
                 )
             )
             return response.text
