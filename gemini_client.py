@@ -5,6 +5,12 @@ import time
 import logging
 import os
 
+# DEBUG TEMPORAL — muestra qué variables existen en Railway
+import sys
+print("=== DEBUG ENV VARS ===", flush=True)
+print(f"Variables disponibles: {[k for k in os.environ.keys()]}", flush=True)
+print("======================", flush=True)
+
 # Configuración — la API key viene de variable de entorno, NUNCA hardcodeada
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
